@@ -1,4 +1,4 @@
-#![crate_id = "http://github.com/ltlollo/string-matcher#algos:0.1.0"]
+#![crate_id = "http://github.com/ltlollo/string-matcher-rust#algos:0.1.0"]
 #![crate_type = "lib"]
 #![desc = "Some algoritms"]
 #![license = "GPLv2"]

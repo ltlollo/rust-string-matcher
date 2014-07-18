@@ -1,4 +1,4 @@
-#![crate_id = "http://github.com/ltlollo/string-matcher#string-matcher:0.0.1"]
+#![crate_id = "http://github.com/ltlollo/string-matcher-rust#string-matcher:0.0.1"]
 #![desc = "Find similar files"]
 #![license = "GPLv2"]
 #![warn(non_camel_case_types)]
