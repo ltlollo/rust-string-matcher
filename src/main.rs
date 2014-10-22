@@ -33,7 +33,8 @@ fn work_balancer(data: &Vec<Path>, tx: &Sender<Res>) {
     for id in range(0, NTASKS) {
         let (tx_d, rx_d): (Sender<Data>, Receiver<Data>) = channel();
         tchs.push(tx_d);
-        let rest_load = if total_load % NTASKS != 0 && id < total_load % NTASKS {
+        let rest_load = if total_load % NTASKS != 0
+            && id < total_load % NTASKS {
             1 } else { 0
         };
         let tx_r = tx.clone();
