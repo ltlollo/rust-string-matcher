@@ -1,6 +1,6 @@
 [package]
 
-name = "string-matcher-rust"
+name = "string-matcher"
 version = "0.0.1"
 authors = ["ltlollo <ltlollo.it@gmail.com>"]
 
