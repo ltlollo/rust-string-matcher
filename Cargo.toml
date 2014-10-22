@@ -1,0 +1,9 @@
+[package]
+
+name = "string-matcher-rust"
+version = "0.0.1"
+authors = ["ltlollo <ltlollo.it@gmail.com>"]
+
+[lib]
+name = "algos"
+path = "src/algos.rs"

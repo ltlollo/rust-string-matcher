@@ -1,4 +1,3 @@
-#![crate_id = "http://github.com/ltlollo/string-matcher-rust#string-matcher:0.0.1"]
 #![desc = "Find similar files"]
 #![license = "GPLv2"]
 #![warn(non_camel_case_types)]
@@ -9,7 +8,7 @@ use std::io::fs::readdir;
 use std::comm::{channel, Sender, Receiver};
 use algos::match_norm_sim;
 
-static ntasks: uint = 4;
+static NTASKS: uint = 4;
 
 type Data = (String, String);
 
@@ -28,13 +27,13 @@ fn worker(rx: &Receiver<Data>, num: uint, tx: Sender<Res>) {
 
 fn work_balancer(data: &Vec<Path>, tx: &Sender<Res>) {
     let total_load: uint = (data.len()*(data.len()-1))/2;
-    let thread_load: uint = total_load/ntasks;
+    let thread_load: uint = total_load/NTASKS;
 
-    let mut tchs: Vec<Sender<Data>> = Vec::with_capacity(ntasks);
-    for id in range(0, ntasks) {
+    let mut tchs: Vec<Sender<Data>> = Vec::with_capacity(NTASKS);
+    for id in range(0, NTASKS) {
         let (tx_d, rx_d): (Sender<Data>, Receiver<Data>) = channel();
         tchs.push(tx_d);
-        let rest_load = if total_load % ntasks != 0 && id < total_load % ntasks {
+        let rest_load = if total_load % NTASKS != 0 && id < total_load % NTASKS {
             1 } else { 0
         };
         let tx_r = tx.clone();
@@ -46,10 +45,10 @@ fn work_balancer(data: &Vec<Path>, tx: &Sender<Res>) {
     let mut m: uint = 0;
     for i in range(0, data.len()-1) {
         for j in range(i+1, data.len()) {
-            let f = String::from_str(data.get(i).as_str().unwrap());
-            let s = String::from_str(data.get(j).as_str().unwrap());
-            tchs.get(m).send((f, s));
-            m=(m+1)%ntasks;
+            let f = String::from_str(data[i].as_str().unwrap());
+            let s = String::from_str(data[j].as_str().unwrap());
+            tchs[m].send((f, s));
+            m=(m+1)%NTASKS;
         }
     }
 }

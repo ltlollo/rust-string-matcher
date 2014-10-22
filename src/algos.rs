@@ -1,4 +1,4 @@
-#![crate_id = "http://github.com/ltlollo/string-matcher-rust#algos:0.1.0"]
+#![crate_name = "algos"]
 #![crate_type = "lib"]
 #![desc = "Some algoritms"]
 #![license = "GPLv2"]
@@ -87,8 +87,7 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
 pub fn match_cont_sim ... {
     ...
     loop {
-        let mch: uint = it.zip(snd.iter()).fold(0, |accumulator, item| {
-            let (f, s) = item; 
+        let mch: uint = it.zip(snd.iter()).fold(0, |accumulator, (f, s)| {
             if *f == *s {
                 accumulator+1 
             } else {
@@ -100,8 +99,7 @@ pub fn match_cont_sim ... {
     it = snd.iter();
     len = snd.len();
     loop {
-        let mch: uint = it.zip(fst.iter()).fold(0, |accumulator, item| {
-            let (f, s) = item; 
+        let mch: uint = it.zip(fst.iter()).fold(0, |accumulator, (f, s)| {
             if *f == *s {
                 accumulator+1 
             } else {
