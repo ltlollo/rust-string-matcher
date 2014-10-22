@@ -79,9 +79,7 @@ fn find_similar(data: &Vec<Path>) {
 }
 
 fn main() {
-    let files = readdir(&Path::new("."));
-    match files {
-        Err(_) => (),
-        Ok(ref files) => find_similar(files),
-    }
+    let files = readdir(&Path::new(".")).ok()
+                    .expect("failed to get file list");
+    find_similar(&files);
 }
