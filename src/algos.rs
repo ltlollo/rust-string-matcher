@@ -13,7 +13,7 @@ pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
         mch = 0;
         for (f, s) in it.zip(snd.iter()) {
             if *f == *s {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -28,7 +28,7 @@ pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
         mch = 0;
         for (f, s) in it.zip(fst.iter()) {
             if *f == *s {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -51,7 +51,7 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
         mch = 0;
         for (f, s) in it.zip(snd.iter()) {
             if *f == *s {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -60,7 +60,7 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
         if it.next() == None || mch_max >= len {
             break;
         }
-        len-=1;
+        len -= 1;
     }
     it = snd.iter();
     len = snd.len();
@@ -68,7 +68,7 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
         mch = 0;
         for (f, s) in it.zip(fst.iter()) {
             if *f == *s {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -77,7 +77,7 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
         if it.next() == None || mch_max >= len {
             break;
         }
-        len-=1;
+        len -= 1;
     }
 
     mch_max
@@ -112,7 +112,8 @@ pub fn match_cont_sim ... {
 }
 */
 
-pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -> bool) -> uint {
+pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T],
+                                         fun: |f: &T, s: &T| -> bool) -> uint {
     let mut mch_max: uint = 0;
     let mut mch: uint;
     let mut it = fst.iter();
@@ -122,7 +123,7 @@ pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &
         mch = 0;
         for (f, s) in it.zip(snd.iter()) {
             if fun(f, s) {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -131,7 +132,7 @@ pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &
         if it.next() == None || mch_max >= len {
             break;
         }
-        len-=1;
+        len -= 1;
     }
     it = snd.iter();
     len = snd.len();
@@ -139,7 +140,7 @@ pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &
         mch = 0;
         for (f, s) in it.zip(fst.iter()) {
             if fun(f, s) {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -148,13 +149,14 @@ pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &
         if it.next() == None || mch_max >= len {
             break;
         }
-        len-=1;
+        len -= 1;
     }
 
     mch_max
 }
 
-pub fn match_cont_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -> bool) -> uint {
+pub fn match_cont_trim<T: PartialEq>(fst: &[T], snd: &[T],
+                                     fun: |f: &T, s: &T| -> bool) -> uint {
     let mut mch_max :uint = 0;
     let mut mch: uint;
     let mut it = fst.iter();
@@ -163,7 +165,7 @@ pub fn match_cont_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -
         mch = 0;
         for (f, s) in it.zip(snd.iter()) {
             if fun(f, s) {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -178,7 +180,7 @@ pub fn match_cont_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -
         mch = 0;
         for (f, s) in it.zip(fst.iter()) {
             if fun(f, s) {
-                mch+=1;
+                mch += 1;
             }
         }
         if mch > mch_max {
@@ -209,7 +211,8 @@ pub fn match_norm_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> f64 {
     }
 }
 
-pub fn match_norm_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -> bool) -> f64 {
+pub fn match_norm_trim<T: PartialEq>(fst: &[T], snd: &[T],
+                                     fun: |f: &T, s: &T| -> bool) -> f64 {
     let len = if fst.len() > snd.len() { fst.len() } else { snd.len() };
     if len != 0 {
         (match_cont_trim(fst, snd, fun) as f64)/(len as f64)
@@ -218,7 +221,8 @@ pub fn match_norm_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -
     }
 }
 
-pub fn match_norm_sim_trim<T: PartialEq>(fst: &[T], snd: &[T], fun: |f: &T, s: &T| -> bool) -> f64 {
+pub fn match_norm_sim_trim<T: PartialEq>(fst: &[T], snd: &[T],
+                                         fun: |f: &T, s: &T| -> bool) -> f64 {
     let len = if fst.len() > snd.len() { fst.len() } else { snd.len() };
     if len != 0 {
         (match_cont_sim_trim(fst, snd, fun) as f64)/(len as f64)
