@@ -1,6 +1,5 @@
 #![desc = "Find similar files"]
 #![license = "GPLv2"]
-#![warn(non_camel_case_types)]
 
 extern crate algos;
 

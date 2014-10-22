@@ -2,7 +2,6 @@
 #![crate_type = "lib"]
 #![desc = "Some algoritms"]
 #![license = "GPLv2"]
-#![warn(non_camel_case_types)]
 
 pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> uint {
     let mut mch_max :uint = 0;
