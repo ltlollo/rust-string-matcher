@@ -4,7 +4,10 @@
 extern crate algos;
 
 use std::io::fs::readdir;
-use std::comm::{channel, Sender, Receiver};
+use std::cmp::Ordering;
+use std::cmp::Ordering::{Equal, Less, Greater};
+use std::sync::mpsc::{channel, Sender, Receiver};
+use std::thread::Thread;
 use algos::match_norm_sim;
 
 static NTASKS: uint = 4;
@@ -18,9 +21,9 @@ struct Res {
 
 fn worker(rx: &Receiver<Data>, num: uint, tx: Sender<Res>) {
     for _ in range(0, num) {
-        let (f, s) = rx.recv();
+        let (f, s) = rx.recv().unwrap();
         let m = match_norm_sim(f.as_bytes(), s.as_bytes());
-        tx.send(Res { pair: (f, s), mch: m });
+        tx.send(Res { pair: (f, s), mch: m }).unwrap();
     }
 }
 
@@ -37,9 +40,9 @@ fn work_balancer(data: &Vec<Path>, tx: &Sender<Res>) {
             1 } else { 0
         };
         let tx_r = tx.clone();
-        spawn(proc() {
+        Thread::spawn(move || {
             worker(&rx_d, thread_load + rest_load, tx_r);
-        });
+        }).detach();
     }
 
     let mut m: uint = 0;
@@ -47,7 +50,7 @@ fn work_balancer(data: &Vec<Path>, tx: &Sender<Res>) {
         for j in range(i+1, data.len()) {
             let f = String::from_str(data[i].as_str().unwrap());
             let s = String::from_str(data[j].as_str().unwrap());
-            tchs[m].send((f, s));
+            tchs[m].send((f, s)).unwrap();
             m=(m+1)%NTASKS;
         }
     }
@@ -65,13 +68,14 @@ fn find_similar(data: &Vec<Path>) {
     let load: uint = data.len()*(data.len()-1)/2;
     let mut res: Vec<Res> = Vec::with_capacity(load);
     for _ in range(0, load) {
-        res.push(rx.recv());
+        res.push(rx.recv().unwrap());
     }
     res.sort_by(|f: &Res, s: &Res| -> Ordering
         if f.mch > s.mch { Greater } else if f.mch < s.mch { Less } else {
             Equal
         }
     );
+
     for it in res.iter().rev() {
         let (ref f, ref s) = it.pair;
         println!("{}, {} is {}", f, s, it.mch);
