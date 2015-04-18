@@ -79,17 +79,13 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
 pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T],
                                          fun: &Fn(&T, &T) -> bool) -> usize {
     let mut mch_max: usize = 0;
-    let mut mch: usize;
     let mut it = fst.iter();
     let mut len = fst.len();
-
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(snd.iter()) {
-            if fun(f, s) {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(snd.iter())
+                    .filter(|&(f, s)| { fun(f, s) })
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
@@ -101,12 +97,10 @@ pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T],
     it = snd.iter();
     len = snd.len();
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(fst.iter()) {
-            if fun(f, s) {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(fst.iter())
+                    .filter(|&(f, s)| { fun(f, s) })
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
@@ -122,16 +116,12 @@ pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T],
 pub fn match_cont_trim<T: PartialEq>(fst: &[T], snd: &[T],
                                      fun: &Fn(&T, &T) -> bool) -> usize {
     let mut mch_max :usize = 0;
-    let mut mch: usize;
     let mut it = fst.iter();
-
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(snd.iter()) {
-            if fun(f, s) {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(snd.iter())
+                    .filter(|&(f, s)| { fun(f, s) })
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
@@ -141,12 +131,10 @@ pub fn match_cont_trim<T: PartialEq>(fst: &[T], snd: &[T],
     }
     it = snd.iter();
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(fst.iter()) {
-            if fun(f, s) {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(fst.iter())
+                    .filter(|&(f, s)| { fun(f, s) })
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
