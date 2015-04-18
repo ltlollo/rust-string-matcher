@@ -6,16 +6,14 @@
 
 pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     let mut mch_max :usize = 0;
-    let mut mch: usize;
     let mut it = fst.iter();
 
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(snd.iter()) {
-            if *f == *s {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(snd.iter())
+                    .fold(0, |accu, (f, s)| {
+                        if *f == *s { accu+1 } else { accu }
+                    });
         if mch > mch_max {
             mch_max = mch;
         }
@@ -25,12 +23,11 @@ pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     }
     it = snd.iter();
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(fst.iter()) {
-            if *f == *s {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(fst.iter())
+                    .fold(0, |accu, (f, s)| {
+                        if *f == *s { accu+1 } else { accu }
+                    });
         if mch > mch_max {
             mch_max = mch;
         }
@@ -43,17 +40,15 @@ pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
 
 pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     let mut mch_max :usize = 0;
-    let mut mch: usize;
     let mut it = fst.iter();
     let mut len = fst.len();
 
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(snd.iter()) {
-            if *f == *s {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(snd.iter())
+                    .fold(0, |accu, (f, s)| {
+                        if *f == *s { accu+1 } else { accu }
+                    });
         if mch > mch_max {
             mch_max = mch;
         }
@@ -65,12 +60,11 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     it = snd.iter();
     len = snd.len();
     loop {
-        mch = 0;
-        for (f, s) in it.clone().zip(fst.iter()) {
-            if *f == *s {
-                mch += 1;
-            }
-        }
+        let mch = it.clone()
+                    .zip(fst.iter())
+                    .fold(0, |accu, (f, s)| {
+                        if *f == *s { accu+1 } else { accu }
+                    });
         if mch > mch_max {
             mch_max = mch;
         }
@@ -79,38 +73,8 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
         }
         len -= 1;
     }
-
     mch_max
 }
-
-/*
-pub fn match_cont_sim ... {
-    ...
-    loop {
-        let mch: usize = it.clone().zip(snd.iter()).fold(0, |accumulator, (f, s)| {
-            if *f == *s {
-                accumulator+1 
-            } else {
-                accumulator
-            }
-        });
-        ...
-    }
-    it = snd.iter();
-    len = snd.len();
-    loop {
-        let mch: usize = it.clone().zip(fst.iter()).fold(0, |accumulator, (f, s)| {
-            if *f == *s {
-                accumulator+1 
-            } else {
-                accumulator
-            }
-        });
-        ...
-    }
-    mch_max
-}
-*/
 
 pub fn match_cont_sim_trim<T: PartialEq>(fst: &[T], snd: &[T],
                                          fun: &Fn(&T, &T) -> bool) -> usize {
