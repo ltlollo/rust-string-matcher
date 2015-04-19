@@ -1,10 +1,6 @@
-#![crate_name = "algos"]
-#![crate_type = "lib"]
-
 pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     let mut mch_max :usize = 0;
     let mut it = fst.iter();
-
     loop {
         let mch = it.clone()
                     .zip(snd.iter())
@@ -37,7 +33,6 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     let mut mch_max :usize = 0;
     let mut it = fst.iter();
     let mut len = fst.len();
-
     loop {
         let mch = it.clone()
                     .zip(snd.iter())

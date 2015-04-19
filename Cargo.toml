@@ -6,5 +6,4 @@ authors = ["ltlollo <ltlollo.it@gmail.com>"]
 license = "GPLv2"
 
 [lib]
-name = "algos"
-path = "src/algos.rs"
+name = "lib"
