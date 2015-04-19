@@ -4,7 +4,6 @@
 extern crate algos;
 
 use std::fs::{self, read_dir};
-use std::cmp::Ordering::{self, Equal, Less, Greater};
 use algos::match_norm_sim;
 use std::thread;
 use std::sync::mpsc::{self, Sender, Receiver};
@@ -29,10 +28,8 @@ fn find_similar(data: &Vec<String>, window: usize) {
             let ch = tx.clone();
             guards.push(thread::scoped(move || {
                 let mut res = Vec::new();
-                for (k, ele) in chunk.iter().enumerate() {
-                    for j in (i*chunksize+k+1..data.len()) {
-                            let ref f = ele;
-                            let ref s = data[j];
+                for (j, f) in chunk.iter().enumerate() {
+                    for s in data[i*chunksize+j+1..data.len()].iter() {
                             let m = match_norm_sim(f.as_bytes(), s.as_bytes());
                             let r = Res{ data: (f, s), mch: m };
                             res.push(r);
@@ -47,15 +44,8 @@ fn find_similar(data: &Vec<String>, window: usize) {
         let mut v = rx.recv().unwrap();
         res.append(&mut v);
     }
-
     res.sort_by(|f: &Res, s: &Res| -> Ordering {
-        if f.mch > s.mch {
-            Greater
-        } else if f.mch < s.mch {
-            Less
-        } else {
-            Equal
-        }
+        f.mch.partial_cmp(&s.mch).unwrap()
     });
     for it in res.iter().rev().take(window) {
         let (ref f, ref s) = it.data;
