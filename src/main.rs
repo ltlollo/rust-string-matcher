@@ -1,7 +1,5 @@
 #![feature(collections)]
-#![feature(core)]
 
-extern crate core;
 extern crate lib;
 
 use std::fs::{self, read_dir};
