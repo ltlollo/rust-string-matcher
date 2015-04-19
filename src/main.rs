@@ -7,6 +7,7 @@ use std::fs::{self, read_dir};
 use algos::match_norm_sim;
 use std::thread;
 use std::sync::mpsc::{self, Sender, Receiver};
+use std::cmp::Ordering;
 
 type Data<'a> = (&'a String, &'a String);
 struct Res<'a> {

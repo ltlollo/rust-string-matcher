@@ -8,9 +8,8 @@ pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     loop {
         let mch = it.clone()
                     .zip(snd.iter())
-                    .fold(0, |accu, (f, s)| {
-                        if *f == *s { accu+1 } else { accu }
-                    });
+                    .filter(|&(f, s)| *f == *s )
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
@@ -22,9 +21,8 @@ pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     loop {
         let mch = it.clone()
                     .zip(fst.iter())
-                    .fold(0, |accu, (f, s)| {
-                        if *f == *s { accu+1 } else { accu }
-                    });
+                    .filter(|&(f, s)| *f == *s )
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
@@ -43,9 +41,8 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     loop {
         let mch = it.clone()
                     .zip(snd.iter())
-                    .fold(0, |accu, (f, s)| {
-                        if *f == *s { accu+1 } else { accu }
-                    });
+                    .filter(|&(f, s)| *f == *s )
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
@@ -59,9 +56,8 @@ pub fn match_cont_sim<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     loop {
         let mch = it.clone()
                     .zip(fst.iter())
-                    .fold(0, |accu, (f, s)| {
-                        if *f == *s { accu+1 } else { accu }
-                    });
+                    .filter(|&(f, s)| *f == *s )
+                    .count();
         if mch > mch_max {
             mch_max = mch;
         }
