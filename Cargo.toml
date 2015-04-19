@@ -3,6 +3,7 @@
 name = "string-matcher"
 version = "0.0.1"
 authors = ["ltlollo <ltlollo.it@gmail.com>"]
+license = "GPLv2"
 
 [lib]
 name = "algos"

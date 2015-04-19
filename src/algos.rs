@@ -1,8 +1,5 @@
-#![feature(custom_attribute)]
 #![crate_name = "algos"]
 #![crate_type = "lib"]
-#![desc = "Some algoritms"]
-#![license = "GPLv2"]
 
 pub fn match_cont<T: PartialEq>(fst: &[T], snd: &[T]) -> usize {
     let mut mch_max :usize = 0;
