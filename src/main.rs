@@ -1,28 +1,41 @@
 #![feature(collections)]
 #![feature(scoped)]
+#![feature(custom_derive)]
+#![feature(core)]
 
 extern crate algos;
+extern crate core;
 
 use std::fs::{self, read_dir};
+use core::fmt;
 use algos::match_norm_sim;
 use std::thread;
-use std::sync::mpsc::{self, Sender, Receiver};
+use std::sync::mpsc;
 use std::cmp::Ordering;
 
 type Data<'a> = (&'a String, &'a String);
-struct Res<'a> {
+
+struct StrMatch<'a> {
     data: Data<'a>,
     mch: f64
 }
 
+impl<'a> fmt::Display for StrMatch<'a> {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        let (ref f, ref s) = self.data;
+        write!(fmt, "{}, {}, {}", f, s, self.mch)
+    }
+}
+
 static NTHREADS: usize = 4;
 
-fn find_similar(data: &Vec<String>, window: usize) {
+fn find_similar(data: &Vec<String>) -> Vec<StrMatch> {
+    let mut res = Vec::new();
     if data.len() < 2 {
-        return;
+        return res;
     }
     let chunksize = data.len() / NTHREADS;
-    let (tx, rx): (Sender<Vec<Res>>, Receiver<Vec<Res>>) = mpsc::channel();
+    let (tx, rx) = mpsc::channel();
     {
         let mut guards = Vec::with_capacity(NTHREADS);
         for (i, chunk) in data[0..data.len()-1].chunks(chunksize).enumerate() {
@@ -32,7 +45,7 @@ fn find_similar(data: &Vec<String>, window: usize) {
                 for (j, f) in chunk.iter().enumerate() {
                     for s in data[i*chunksize+j+1..data.len()].iter() {
                             let m = match_norm_sim(f.as_bytes(), s.as_bytes());
-                            let r = Res{ data: (f, s), mch: m };
+                            let r = StrMatch{ data: (f, s), mch: m };
                             res.push(r);
                     }
                 }
@@ -40,17 +53,20 @@ fn find_similar(data: &Vec<String>, window: usize) {
             }));
         }
     }
-    let mut res = Vec::new();
     for _ in 0..NTHREADS {
         let mut v = rx.recv().unwrap();
         res.append(&mut v);
     }
-    res.sort_by(|f: &Res, s: &Res| -> Ordering {
+    res.sort_by(|f: &StrMatch, s: &StrMatch| -> Ordering {
         f.mch.partial_cmp(&s.mch).unwrap()
     });
-    for it in res.iter().rev().take(window) {
-        let (ref f, ref s) = it.data;
-        println!("{}, {} is {}", f, s, it.mch);
+    res
+}
+
+fn show_similar(data: &Vec<String>, window: usize) {
+    let res = find_similar(data);
+    for str_match in res.iter().rev().take(window) {
+        println!("{}", str_match);
     }
 }
 
@@ -69,5 +85,5 @@ fn main() {
     files.sort_by(|f: &String, s: &String| -> Ordering {
         f.len().cmp(&s.len())
     });
-    find_similar(&files, 100); 
+    show_similar(&files, 100);
 }
