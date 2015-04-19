@@ -1,6 +1,5 @@
 #![feature(collections)]
 #![feature(scoped)]
-#![feature(custom_derive)]
 #![feature(core)]
 
 extern crate algos;
