@@ -6,7 +6,7 @@ use std::thread;
 use std::sync::mpsc;
 use std::cmp::Ordering;
 
-type Data<'a> = (&'a String, &'a String);
+type Data<'a> = (&'a Vec<char>, &'a Vec<char>);
 
 pub struct StrMatch<'a> {
     data: Data<'a>,
@@ -16,13 +16,15 @@ pub struct StrMatch<'a> {
 impl<'a> fmt::Display for StrMatch<'a> {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         let (ref f, ref s) = self.data;
+        let f : String = f.iter().map(|x| *x ).collect();
+        let s : String = s.iter().map(|x| *x ).collect();
         write!(fmt, "{}, {}, {}", f, s, self.mch)
     }
 }
 
 static NTHREADS: usize = 4;
 
-pub fn find_similar(data: &Vec<String>) -> Vec<StrMatch> {
+pub fn find_similar(data: &Vec<Vec<char>>) -> Vec<StrMatch> {
     let mut res = Vec::new();
     if data.len() < 2 {
         return res;
@@ -37,7 +39,7 @@ pub fn find_similar(data: &Vec<String>) -> Vec<StrMatch> {
                 let mut res = Vec::new();
                 for (j, f) in chunk.iter().enumerate() {
                     for s in data[i*chunksize+j+1..data.len()].iter() {
-                            let m = match_norm_sim(f.as_bytes(), s.as_bytes());
+                            let m = match_norm_sim(&f[..], &s[..]);
                             let r = StrMatch{ data: (f, s), mch: m };
                             res.push(r);
                     }
@@ -56,7 +58,7 @@ pub fn find_similar(data: &Vec<String>) -> Vec<StrMatch> {
     res
 }
 
-pub fn show_similar(data: &Vec<String>, window: usize) {
+pub fn show_similar(data: &Vec<Vec<char>>, window: usize) {
     let res = find_similar(data);
     for str_match in res.iter().rev().take(window) {
         println!("{}", str_match);

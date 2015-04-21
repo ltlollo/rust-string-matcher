@@ -17,9 +17,9 @@ fn main() {
                                     .unwrap()
                                     .to_str()
                                     .unwrap());
-        files.push(fstr);
+        files.push(fstr.chars().collect());
     }
-    files.sort_by(|f: &String, s: &String| -> Ordering {
+    files.sort_by(|f: &Vec<char>, s: &Vec<char>| -> Ordering {
         f.len().cmp(&s.len())
     });
     show_similar(&files, 100);
