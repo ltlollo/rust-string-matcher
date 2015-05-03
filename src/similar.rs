@@ -22,7 +22,7 @@ impl<'a> fmt::Display for StrMatch<'a> {
     }
 }
 
-static NTHREADS: usize = 4;
+static NTHREADS: usize = 8;
 
 pub fn find_similar(data: &Vec<Vec<char>>) -> Vec<StrMatch> {
     let mut res = Vec::new();
