@@ -1,5 +1,3 @@
-#![feature(collections)]
-
 extern crate lib;
 
 use std::fs::{self, read_dir};
@@ -10,13 +8,13 @@ use lib::show_similar;
 fn main() {
     let mut files = Vec::new();
     for entry in fs::read_dir(".").unwrap() {
-        let fstr = String::from_str(entry
-                                    .unwrap()
-                                    .path()
-                                    .file_name()
-                                    .unwrap()
-                                    .to_str()
-                                    .unwrap());
+        let fstr = String::from(entry
+                                .unwrap()
+                                .path()
+                                .file_name()
+                                .unwrap()
+                                .to_str()
+                                .unwrap());
         files.push(fstr.chars().collect());
     }
     files.sort_by(|f: &Vec<char>, s: &Vec<char>| -> Ordering {
