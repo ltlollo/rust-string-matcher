@@ -1,4 +1,4 @@
-#![feature(collections)]
+#![feature(append)]
 #![feature(scoped)]
 #![feature(core)]
 
