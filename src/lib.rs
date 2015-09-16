@@ -1,5 +1,3 @@
-#![feature(append)]
-#![feature(scoped)]
 #![feature(core)]
 
 pub mod algos;

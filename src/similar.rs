@@ -1,8 +1,9 @@
 extern crate core;
+extern crate thread_scoped;
 
 use self::core::fmt;
 use algos::match_norm_sim;
-use std::thread;
+use self::thread_scoped::scoped;
 use std::sync::mpsc;
 use std::cmp::Ordering;
 
@@ -35,17 +36,19 @@ pub fn find_similar(data: &Vec<Vec<char>>) -> Vec<StrMatch> {
         let mut guards = Vec::with_capacity(NTHREADS);
         for (i, chunk) in data[0..data.len()-1].chunks(chunksize).enumerate() {
             let ch = tx.clone();
-            guards.push(thread::scoped(move || {
-                let mut res = Vec::new();
-                for (j, f) in chunk.iter().enumerate() {
-                    for s in data[i*chunksize+j+1..data.len()].iter() {
-                            let m = match_norm_sim(&f[..], &s[..]);
-                            let r = StrMatch{ data: (f, s), mch: m };
-                            res.push(r);
+            unsafe {
+                guards.push(scoped(move || {
+                    let mut res = Vec::new();
+                    for (j, f) in chunk.iter().enumerate() {
+                        for s in data[i*chunksize+j+1..data.len()].iter() {
+                                let m = match_norm_sim(&f[..], &s[..]);
+                                let r = StrMatch{ data: (f, s), mch: m };
+                                res.push(r);
+                        }
                     }
-                }
-                ch.send(res).unwrap();
-            }));
+                    ch.send(res).unwrap();
+                }));
+            }
         }
     }
     for _ in 0..NTHREADS {

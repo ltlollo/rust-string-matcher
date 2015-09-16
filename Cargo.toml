@@ -7,3 +7,6 @@ license = "GPLv2"
 
 [lib]
 name = "lib"
+
+[dependencies]
+thread-scoped = "*"
