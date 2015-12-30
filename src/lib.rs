@@ -1,5 +1,3 @@
-#![feature(core)]
-
 pub mod algos;
 pub mod similar;
 

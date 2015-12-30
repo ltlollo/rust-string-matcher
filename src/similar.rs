@@ -11,14 +11,14 @@ type Data<'a> = (&'a Vec<char>, &'a Vec<char>);
 
 pub struct StrMatch<'a> {
     data: Data<'a>,
-    mch: f64
+    mch: f64,
 }
 
 impl<'a> fmt::Display for StrMatch<'a> {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         let (ref f, ref s) = self.data;
-        let f : String = f.iter().map(|x| *x ).collect();
-        let s : String = s.iter().map(|x| *x ).collect();
+        let f: String = f.iter().map(|x| *x).collect();
+        let s: String = s.iter().map(|x| *x).collect();
         write!(fmt, "{}, {}, {}", f, s, self.mch)
     }
 }
@@ -34,16 +34,19 @@ pub fn find_similar(data: &Vec<Vec<char>>) -> Vec<StrMatch> {
     let (tx, rx) = mpsc::channel();
     {
         let mut guards = Vec::with_capacity(NTHREADS);
-        for (i, chunk) in data[0..data.len()-1].chunks(chunksize).enumerate() {
+        for (i, chunk) in data[0..data.len() - 1].chunks(chunksize).enumerate() {
             let ch = tx.clone();
             unsafe {
                 guards.push(scoped(move || {
                     let mut res = Vec::new();
                     for (j, f) in chunk.iter().enumerate() {
-                        for s in data[i*chunksize+j+1..data.len()].iter() {
-                                let m = match_norm_sim(&f[..], &s[..]);
-                                let r = StrMatch{ data: (f, s), mch: m };
-                                res.push(r);
+                        for s in data[i * chunksize + j + 1..data.len()].iter() {
+                            let m = match_norm_sim(&f[..], &s[..]);
+                            let r = StrMatch {
+                                data: (f, s),
+                                mch: m,
+                            };
+                            res.push(r);
                         }
                     }
                     ch.send(res).unwrap();
@@ -55,9 +58,7 @@ pub fn find_similar(data: &Vec<Vec<char>>) -> Vec<StrMatch> {
         let mut v = rx.recv().unwrap();
         res.append(&mut v);
     }
-    res.sort_by(|f: &StrMatch, s: &StrMatch| -> Ordering {
-        f.mch.partial_cmp(&s.mch).unwrap()
-    });
+    res.sort_by(|f: &StrMatch, s: &StrMatch| -> Ordering { f.mch.partial_cmp(&s.mch).unwrap() });
     res
 }
 
